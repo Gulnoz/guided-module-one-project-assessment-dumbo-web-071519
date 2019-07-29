@@ -13,11 +13,12 @@
 ActiveRecord::Schema.define(version: 2019_07_29_205458) do
 
   create_table "cards", force: :cascade do |t|
-    t.string "type"
+    t.string "card_type"
     t.string "name_short"
     t.string "name"
     t.string "value"
     t.integer "value_int"
+    t.string "suit"
     t.string "meaning_up"
     t.string "meaning_rev"
     t.string "desc"
