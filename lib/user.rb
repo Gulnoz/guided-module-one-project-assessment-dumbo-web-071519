@@ -1,9 +1,6 @@
 class User < ActiveRecord::Base
     has_many :hand_cards
     has_many :cards, through: :hand_cards
-<<<<<<< HEAD
-    
-=======
 
     def self.handle_returning_user
     puts "What is your name?"
@@ -26,5 +23,4 @@ class User < ActiveRecord::Base
         # team = Team.find(team_id)
         # team.list_members
     end
->>>>>>> 1f1d347138aa2f4ed9f910fa07f7116fcfc11d86
 end
