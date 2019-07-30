@@ -1,3 +1,7 @@
+# Card.destroy_all
+# User.destroy_all
+# HandCard.destroy_all 
+
 deck_array = [
     {
       "card_type": "major",
@@ -837,17 +841,53 @@ deck_array = [
     }
   ]
 
-  deck_array.each do |card_obj|
-    #binding.pry
-    card = Card.create(
-        card_obj
+deck_array.each do |card_obj|
+#binding.pry
+card = Card.create(
+    card_obj
     # :type => card_obj[:type],
-        # :name_short => card_obj[:name_short],
-        # :value => card_obj[:value],
-        # :value_int => card_obj[:value_int],
-        # :meaning_up => card_obj[:meaning_up],
-        # :meaning_rev => card_obj[:meaning_rev],
-        # :desc => card_obj[:desc],
-        # :name => card_obj[:name]
-    )
-  end
+    # :name_short => card_obj[:name_short],
+    # :value => card_obj[:value],
+    # :value_int => card_obj[:value_int],
+    # :meaning_up => card_obj[:meaning_up],
+    # :meaning_rev => card_obj[:meaning_rev],
+    # :desc => card_obj[:desc],
+    # :name => card_obj[:name]
+)
+end
+
+#   t.string :name
+#   t.integer :age
+#   t.string :relationship_status
+#   t.date :birthday
+# user1 = User.create(     
+#     :name => "alessandra vertrees",
+#     :age => 23,
+#     :relationship_status => "in a relationship",
+#     :birthday => 06/07/1996 #needs work
+#     )
+
+# HandCard.new(
+#     :user_id => user1
+#     :card_id => rand(5)
+# )
+
+# HandCard.new(
+#     :user_id => user1
+#     :card_id => rand(5..10)
+# )    
+# HandCard.new(
+#     :user_id => user1
+#     :card_id => rand(10...20)
+# )
+# HandCard.new(
+#     :user_id => user1
+#     :card_id => rand(20...79)
+# )
+
+# card_id_array = Array.new(4) { rand(1...79) }
+# card_id_array.each do |card_id|
+#     HandCard.new(
+#         :user_id => user1
+#         :card_id => card_id
+#     )
