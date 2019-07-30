@@ -11,9 +11,13 @@ class User < ActiveRecord::Base
     def self.handle_new_user
         puts "Welcome to my app. What is your name, traveler?"
         name = gets.chomp
-        User.create(name: name)
+        puts "Enter your age?"
+        age = gets.chomp
+        puts "Enter your age?"
+        relationship_status = gets.chomp
+        User.create(name: name, age: age, relationship_status: relationship_status)
     end
-
+    
     def list_hand_cards
         # # [<TEAM>, <TEAM>] => [{team1Name}, {team2Name}]
         # team_names = self.teams.map do |team|
