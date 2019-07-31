@@ -1,4 +1,7 @@
 require_relative '../config/environment'
+require_relative "../lib/interface"
+require_relative "../lib/user"
+
   #t.string :name
 #   t.integer :age
 #   t.string :relationship_status
@@ -63,15 +66,16 @@ require_relative '../config/environment'
 #     )
 
 cli = Interface.new
-user_object = cli.welcome
-
+# user_object = cli.welcome
+user_object = nil
 while !user_object
   user_object = cli.welcome
 end
 
 cli.user = user_object
-
-choice = cli.main_menu
+user_object.interface = cli
+# ERIC
+# choice = cli.main_menu
 
 
 

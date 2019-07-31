@@ -1,48 +1,46 @@
+require_relative "./interface"
+
 class User < ActiveRecord::Base
     has_many :hand_cards
     has_many :cards, through: :hand_cards
-    
-    def self.handle_returning_user
-        puts "What is your name?"
-        name = gets.chomp
-        User.find_by(name: name)
-    end
+    attr_accessor :interface
 
-    def self.handle_new_user
-        puts "What is your name?"
-        name = gets.chomp
-        puts "Enter your age?"
-        age = gets.chomp
-        puts "What's your relationship status?"
-        relationship_status = gets.chomp
-        User.create(name: name, age: age, relationship_status: relationship_status)
-    end
+    # def self.prompt 
+    #     TTY::Prompt.new
+    #     #Interface.new
+    # end
 
-    def handle_new_reading
-        self.generate_hand_cards
-        puts "generating your fortune...please stand by..."
-        list_hand_cards(get_last_hand)
-        #Array of instanses of hand_cards present them like menu of cards 
-        #to be abe to choise one
-        #we get card_id wich was chosen and returning the card object from the hand_card table
+    # def self.handle_returning_user
+    #     puts "What is your name?"
+    #     name = gets.chomp
+        
+    #     User.find_by(name: name)
+    # end
 
-    end
+    # def self.handle_new_user
+    #     puts "What is your name?"
+    #     name = gets.chomp
+    #     puts "Enter your age?"
+    #     age = gets.chomp
+    #     puts "What's your relationship status?"
+    #     relationship_status = gets.chomp
+    #     User.create(name: name, age: age, relationship_status: relationship_status)
+    # end
+
+    # def handle_new_reading
+    #     self.generate_hand_cards
+    #     puts "generating your fortune...please stand by..."
+    #     self.interface.list_hand_cards(get_last_hand)
+    #     #Array of instanses of hand_cards present them like menu of cards 
+    #     #to be abe to choise one
+    #     #we get card_id wich was chosen and returning the card object from the hand_card table
+
+    # end
 
     ##### if user wants to generate a new reading more than once in the same day
     ##### we will update the last four hand_cards, rather than creating four new instances
     ##### and that way we can keep track of the date in a cleaner fashion.
-
-    def handle_previous_reading
-        puts "finding your fortune...please stand by..."
-        self.list_reading_dates
-        #array of dates wich we need to make menu of selections fro user to select a date 
-        #when user select the date from menu we we pass it(variable) to handle_previous_reading_by_date(selected_date)
-    end
     
-    def handle_previous_reading_by_date(selected_date)
-        puts "finding your fortune...please stand by..."
-        list_hand_cards(find_hand_cards_by_datetime(selected_date))
-    end
 
     def card_id_array
         self.get_last_hand.map do |hand_card|
@@ -67,6 +65,11 @@ class User < ActiveRecord::Base
         end
     end
 
+    def update_hand_card(hand_card_id)
+        HandCard.update(hand_card_id, :card_id => self.available_cards.sample.id)
+    end
+
+    
     def generate_hand_card
         available_card = self.available_cards.sample
         #binding.pry
@@ -75,38 +78,26 @@ class User < ActiveRecord::Base
 
 
     def generate_hand_cards
-        self.generate_hand_card
-        self.generate_hand_card
-        self.generate_hand_card
-        self.generate_hand_card
+        if self.get_last_hand.length == 4 && self.get_last_hand[-4].date == Time.now.strftime("%m/%d/%Y")
+            binding.pry
+            hand = get_last_hand.map do |hand_card|
+                hand_card.id
+            end
+            self.update_hand_card(hand[0])
+            self.update_hand_card(hand[1])
+            self.update_hand_card(hand[2])
+            self.update_hand_card(hand[3])
+        else
+            self.generate_hand_card
+            self.generate_hand_card
+            self.generate_hand_card
+            self.generate_hand_card
+        end
     end
 
-    #TODO: work on this method so that it returns a TTY::Prompt.new.select menu for reading
-    #the individual cards
-    def list_hand_cards(card_array)
-       user_command=""
-        while user_command!="x"
-            last_four_cards = self.get_last_hand.map do |hand_card| {
-            # name: hand_card.card.meaning_rev, value: hand_card.card_id
-             name: hand_card.id, value: hand_card.card_id
-        } end
-            selected_card_id = TTY::Prompt.new.select("These are your cards, #{self.name}. 
-            Choose 1 to see more interpratation.", last_four_cards)
-            card = Card.find(selected_card_id)
-            card.display_information
-            #lists the last four hand cards
-            puts "To go to main-menu, press <X>. To continue press <Enter>."
-            user_command=gets.chomp
-        end
-        # # exit!
-        # cli = Interface.new
-        # cli.user = self
-        # cli.main_menu        
-    end
+
     
     #menu of card information
-
-    
     def reading_dates
         self.hand_cards.map do |hand_card|
             hand_card.date
@@ -115,26 +106,19 @@ class User < ActiveRecord::Base
 
     #TODO: work on this method so that it returns a TTY::Prompt.new.select menu for reading
     #the individual dates
-    def list_reading_dates
-        chosen_dates = self.reading_dates.map do |reading_date| {
-            name: reading_date, value: reading_date
-        }end
-        
-        if chosen_dates.length>0
-            selected_date = TTY::Prompt.new.select("These are your last readings date, #{self.name}. 
-            Choose 1 to see more details.", chosen_dates)
-            handle_previous_reading_by_date(selected_date)
-        else
-            puts "Nothing there.."
-            
-        end
-        puts "To go to the main-menu press <X>"
-        # if gets.chomp == x
-        # # cli = Interface.new
-        # # cli.user = self
-        # # cli.main_menu
-        # end
-    end
+    # def list_reading_dates
+    #     system "clear"
+    #     user_choice = ""
+    #     while user_choice != "❌ EXIT ❌"
+    #         #binding.pry
+    #         user_choice = TTY::Prompt.new.select("🔮 #{self.name}, Select a date to view your past reading.") do |menu|
+    #             reading_dates.map do |date|
+    #                 menu.choice "#{date}", -> {handle_previous_reading_by_date(date)}
+    #             end
+    #             menu.choice "❌ EXIT ❌", -> {self.interface.main_menu}
+    #         end
+    #     end
+    # end
 
     ## TODO: figure out Date object stuff
 
