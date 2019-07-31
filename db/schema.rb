@@ -27,7 +27,7 @@ ActiveRecord::Schema.define(version: 2019_07_29_205458) do
   create_table "hand_cards", force: :cascade do |t|
     t.integer "user_id"
     t.integer "card_id"
-    t.datetime "date"
+    t.string "date"
   end
 
   create_table "users", force: :cascade do |t|

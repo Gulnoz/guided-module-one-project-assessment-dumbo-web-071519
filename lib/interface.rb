@@ -16,12 +16,13 @@ class Interface
         system "clear"
         user.reload
         prompt.select("#{self.user.name}! are you ready to learn your fortune? Choose 4 cards, please.") do |menu|
-          menu.choice "New fortune reading", -> {self.user.list_teams}
-          menu.choice "See previous readings"
+          menu.choice "New fortune reading", -> {self.user.handle_new_reading}
+          menu.choice "See previous readings", -> {self.user.handle_previous_reading}
           menu.choice "Update your information"
           menu.choice "Delete a reading"
           menu.choice "Delete yourself"
-          
+          menu.choice "Exit", ->{self.welcome}
         end
+        
       end
 end

@@ -70,7 +70,7 @@ end
 
 cli.user = user_object
 
-choice = cli.main_menu
+
 
 
 
