@@ -61,6 +61,7 @@ require_relative '../config/environment'
 #         :user_id => user1
 #         :card_id => card_id
 #     )
+
 cli = Interface.new
 user_object = cli.welcome
 
@@ -70,6 +71,7 @@ end
 
 cli.user = user_object
 
+choice = cli.main_menu
 
 
 

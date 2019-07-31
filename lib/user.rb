@@ -6,7 +6,6 @@ class User < ActiveRecord::Base
         puts "What is your name?"
         name = gets.chomp
         User.find_by(name: name)
-        
     end
 
     def self.handle_new_user
@@ -87,23 +86,26 @@ class User < ActiveRecord::Base
     def list_hand_cards(card_array)
        user_command=""
         while user_command!="x"
-        last_four_cards = self.get_last_hand.map do |hand_card| {
-            name: hand_card.card.meaning_rev, value: hand_card.card_id
-   
-       } end
-   
-     selected_card_id = TTY::Prompt.new.select("These are your cards, #{self.name}. 
-         Choose 1 to see more interpratation.", last_four_cards)
-          card = Card.find(selected_card_id)
-          card.display_information
-        #lists the last four hand cards
-        puts "To go to main-menu, press <X>. To continue press <Enter>."
-        user_command=gets.chomp
-       end
-       cli = Interface.new
-       cli.user = self
-       cli.main_menu
+            last_four_cards = self.get_last_hand.map do |hand_card| {
+            # name: hand_card.card.meaning_rev, value: hand_card.card_id
+             name: hand_card.id, value: hand_card.card_id
+        } end
+            selected_card_id = TTY::Prompt.new.select("These are your cards, #{self.name}. 
+            Choose 1 to see more interpratation.", last_four_cards)
+            card = Card.find(selected_card_id)
+            card.display_information
+            #lists the last four hand cards
+            puts "To go to main-menu, press <X>. To continue press <Enter>."
+            user_command=gets.chomp
+        end
+        # # exit!
+        # cli = Interface.new
+        # cli.user = self
+        # cli.main_menu        
     end
+    
+    #menu of card information
+
     
     def reading_dates
         self.hand_cards.map do |hand_card|
@@ -116,22 +118,22 @@ class User < ActiveRecord::Base
     def list_reading_dates
         chosen_dates = self.reading_dates.map do |reading_date| {
             name: reading_date, value: reading_date
-           }end
-            
-            if chosen_dates.length>0
+        }end
+        
+        if chosen_dates.length>0
             selected_date = TTY::Prompt.new.select("These are your last readings date, #{self.name}. 
-         Choose 1 to see more details.", chosen_dates)
-         handle_previous_reading_by_date(selected_date)
-            else
-                puts "Nothing there.."
-                
-            end
-            puts "To go to the main-menu press <X>"
-            if gets.chomp == x
-            cli = Interface.new
-            cli.user = self
-            cli.main_menu
-            end
+            Choose 1 to see more details.", chosen_dates)
+            handle_previous_reading_by_date(selected_date)
+        else
+            puts "Nothing there.."
+            
+        end
+        puts "To go to the main-menu press <X>"
+        # if gets.chomp == x
+        # # cli = Interface.new
+        # # cli.user = self
+        # # cli.main_menu
+        # end
     end
 
     ## TODO: figure out Date object stuff
