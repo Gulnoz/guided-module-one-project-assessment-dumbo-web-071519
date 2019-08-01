@@ -22,17 +22,17 @@ class Interface
     def login
 
         system "clear"  
-        puts "What is your name?"
-        name = gets.chomp
+        name = prompt.ask("What is your name?")
+        #name = gets.chomp
         if User.find_by(name: name)!=nil
-        self.user = User.find_by(name: name)
-        user.reload
-        # ERIC
-        self.main_menu
+          self.user = User.find_by(name: name)
+          user.reload
+          # ERIC
+          self.main_menu
         else
             answer = prompt.select("There is no user with this name, please try again.") do |menu|
-            menu.choice "🔮 Try again  🔮", -> {self.login}
-            menu.choice "⬅️ Back ⬅️" , -> {self.welcome}
+              menu.choice "🔮 Try again  🔮", -> {self.login}
+              menu.choice "⬅️ Back ⬅️" , -> {self.welcome}
           end
         end
     end
@@ -45,16 +45,8 @@ class Interface
             menu.choice "Save" , -> {self.create_user(name,age,status)}
             menu.choice "⬅️ Back ⬅️" , -> {self.welcome}
           end
-
-        # puts "What is your name?"
-        # name = gets.chomp
-        # puts "Enter your age?"
-        # age = gets.chomp
-        # puts "What's your relationship status?"
-        # relationship_status = gets.chomp
-        
-        
     end
+
      def create_user(user_name,user_age,user_status)
         user = User.create(name: user_name, age: user_age, relationship_status: user_status)
         self.user = user
@@ -172,13 +164,7 @@ class Interface
                 menu.choice "🗑 DELETE READING 🗑", -> {self.delete_reading(card_array); "🗑 DELETE READING 🗑"}
                 menu.choice "⬅️ BACK ⬅️", -> {self.main_menu;"⬅️ BACK ⬅️"}
                 end   
-            
-                      #hand.card.display_information
-                #binding.pry  
          end 
-        #puts "user_choice = #{user_choice}"  
-        #binding.pry
-        #self.list_hand_cards(card_array)
     end
 
 def reading_card(card_obj, card_array, card_string)
@@ -201,23 +187,23 @@ def reading_card(card_obj, card_array, card_string)
     # system "clear"
 end
     def update_name
-        puts "What name would you like to have"
-        name=gets.chomp
+        name =  prompt.ask("What name would you like to have")
+        #name=gets.chomp
         User.update(self.user.id, :name => name)
         self.settings_menu
     end
     
     # HandCard.update(hand_card_id, :card_id => self.available_cards.sample.id)
     def update_birthday
-        puts "Enter your birthday like (MM/DD/YYYY)."
-        birthday=gets.chomp
+        name = prompt.ask("Enter your birthday like (MM/DD/YYYY).")
+        #birthday=gets.chomp
         User.update(self.user.id, :birthday => birthday)
         self.settings_menu
     end
     
     def update_relationship_status
-        puts "Enter your relationship status."
-        puts "(It's ok, we've been there..)"
+        puts("Enter your relationship status.")
+        status = prompt.ask("(It's ok, we've been there..)") 
         status=gets.chomp
         User.update(self.user.id, :relationship_status => status)
         self.settings_menu
