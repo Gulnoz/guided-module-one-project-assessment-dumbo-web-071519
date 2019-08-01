@@ -9,5 +9,6 @@ class Card < ActiveRecord::Base
       puts "Value: #{self.value_int}"
       puts "Suit: #{self.suit}"
       puts "Description: #{self.desc}"
+      
     end
 end

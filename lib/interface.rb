@@ -137,10 +137,11 @@ class Interface
                 self.user.reading_dates.map do |date|
                     menu.choice "#{date}", -> {self.handle_previous_reading_by_date(date)}
                 end
-                menu.choice "❌ EXIT ❌", -> {self.main_menu}
+                menu.choice "⬅️ Back ⬅️", -> {self.main_menu}
             end
           # binding.pry
         # end
+        
     end
 
     def handle_previous_reading_by_date(selected_date)
@@ -151,7 +152,7 @@ class Interface
     #TODO: work on this method so that it returns a TTY::Prompt.new.select menu for reading
     #the individual cards
     def list_hand_cards(card_array)
-        #system "clear"
+        
         user_choice = ""
         # while user_choice != "❌ EXIT ❌" && user_choice != "🗑 DELETE READING 🗑" do
              #self.reload
@@ -159,21 +160,29 @@ class Interface
                 card_emoji_string = "🂠"
                 crystal_ball_emoji_string = "🔮"
                 card_array.map do |handCard|
-                    menu.choice " 🂠 TAROT #{crystal_ball_emoji_string} 🂠 ", -> {Card.find(handCard.card.id).display_information}
+                    menu.choice " 🂠 TAROT #{crystal_ball_emoji_string} 🂠 ", -> {reading_card(handCard.card)}
+                    # menu.choice " 🂠 TAROT #{crystal_ball_emoji_string} 🂠 ", -> {self.reading_card(Card.find(handCard.card_id))}
                     card_emoji_string += "🂠"
                     crystal_ball_emoji_string += " 🔮"
                 end
+                menu.choice " 🔮Read another card 🔮", -> {self.list_hand_cards(card_array)}
                 menu.choice "🗑 DELETE READING 🗑", -> {self.delete_reading(card_array)}
-                menu.choice "❌ EXIT ❌", -> {self.main_menu}
+                menu.choice "⬅️ Back ⬅️", -> {self.main_menu}
                 end   
             
-                      
+                      #hand.card.display_information
                 # binding.pry  
         # end 
-        puts "user_choice = #{user_choice}"  
-        
+        #puts "user_choice = #{user_choice}"  
+        #self.list_hand_cards(card_array)
     end
-
+def reading_card(card_obj)
+    system "clear"
+    card_obj.display_information
+    
+    # self.list_hand_cards(self.user.get_last_hand)
+    # system "clear"
+end
     def update_name
         puts "What name would you like to have"
         name=gets.chomp

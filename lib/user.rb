@@ -79,7 +79,7 @@ class User < ActiveRecord::Base
 
     def generate_hand_cards
         if self.get_last_hand.length == 4 && self.get_last_hand[-4].date == Time.now.strftime("%m/%d/%Y")
-            binding.pry
+            
             hand = get_last_hand.map do |hand_card|
                 hand_card.id
             end
