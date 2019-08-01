@@ -3,10 +3,12 @@ class Interface
 
     def initialize()
       @prompt = TTY::Prompt.new
+      @font = TTY::Font.new(:doom)
     end
-
+    # puts font.write("DOOM")
     def welcome
         system "clear"
+        puts @font.write("TOROT",letter_spacing: 4)
         puts "Welcome to the 🔮 Tarot 🔮 Application!"
           answer = prompt.select("Have you been here before?") do |menu|
           # menu.choice "🔮 NEW USER 🔮", -> {User.handle_new_user}
@@ -179,7 +181,7 @@ class Interface
 def reading_card(card_obj)
     system "clear"
     card_obj.display_information
-    
+    list_hand_cards(card_array)
     # self.list_hand_cards(self.user.get_last_hand)
     # system "clear"
 end
