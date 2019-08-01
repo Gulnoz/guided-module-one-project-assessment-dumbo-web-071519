@@ -18,13 +18,21 @@ class Interface
     end
 
     def login
+
         system "clear"  
         puts "What is your name?"
         name = gets.chomp
+        if User.find_by(name: name)!=nil
         self.user = User.find_by(name: name)
         user.reload
         # ERIC
         self.main_menu
+        else
+            answer = prompt.select("There is no user with this name, please try again.") do |menu|
+            menu.choice "🔮 Try again  🔮", -> {self.login}
+            menu.choice "❌ Main-menu ❌", -> {self.welcome}
+          end
+        end
     end
 
     def create_new_user
