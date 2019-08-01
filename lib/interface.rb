@@ -30,23 +30,34 @@ class Interface
         else
             answer = prompt.select("There is no user with this name, please try again.") do |menu|
             menu.choice "🔮 Try again  🔮", -> {self.login}
-            menu.choice "❌ Main-menu ❌", -> {self.welcome}
+            menu.choice "⬅️ Back ⬅️" , -> {self.welcome}
           end
         end
     end
 
     def create_new_user
-        puts "What is your name?"
-        name = gets.chomp
-        puts "Enter your age?"
-        age = gets.chomp
-        puts "What's your relationship status?"
-        relationship_status = gets.chomp
-        user = User.create(name: name, age: age, relationship_status: relationship_status)
+        name=prompt.ask("What's your name?")
+        age=prompt.ask("Enter your age?")
+        status=prompt.ask("What's your relationship status?")
+        prompt.select("") do |menu|
+            menu.choice "Save" , -> {self.create_user(name,age,status)}
+            menu.choice "⬅️ Back ⬅️" , -> {self.welcome}
+          end
+
+        # puts "What is your name?"
+        # name = gets.chomp
+        # puts "Enter your age?"
+        # age = gets.chomp
+        # puts "What's your relationship status?"
+        # relationship_status = gets.chomp
+        
+        
+    end
+     def create_user(user_name,user_age,user_status)
+        user = User.create(name: user_name, age: user_age, relationship_status: user_status)
         self.user = user
         self.main_menu
-    end
-
+     end
     def main_menu
         system "clear"
         user.reload
@@ -54,12 +65,7 @@ class Interface
           menu.choice "🔮 GET NEW READING 🔮", -> {self.handle_new_reading}
           menu.choice "🔮 ACCESS PREVIOUS READING 🔮", -> {self.handle_previous_reading}
           menu.choice "🔮 SETTINGS 🔮", -> {self.settings_menu}
-          # menu.choice "Update your information"
-          # menu.choice "Delete a reading"
-          # menu.choice "Delete yourself"
-          #create a Settings menu 
-          #allow user to exit the menu without exiting the program
-          menu.choice "❌ EXIT ❌", -> {self.welcome}
+          menu.choice "⬅️ Back ⬅️", -> {self.welcome}
         end
     end   
 
@@ -71,7 +77,7 @@ class Interface
           menu.choice "🔮 UPDATE BIRTHDAY 🔮", -> {self.update_birthday}
           menu.choice "🔮 UPDATE RELATIONSHIP STATUS 🔮", -> {self.update_relationship_status}
           menu.choice "🔮 DELETE YOURSELF 🔮", -> {self.delete_yourself}
-          menu.choice "❌ EXIT ❌", -> {self.main_menu}
+          menu.choice "⬅️ Back ⬅️", -> {self.main_menu}
       end
     end
 
