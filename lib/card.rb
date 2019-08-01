@@ -9,6 +9,27 @@ class Card < ActiveRecord::Base
       puts "Value: #{self.value_int}"
       puts "Suit: #{self.suit}"
       puts "Description: #{self.desc}"
-      
     end
+
+    def display_type
+      puts "Type: #{self.card_type}"
+    end
+
+    def display_name
+      puts "Name: #{self.name}"
+    end
+
+    def display_value
+      puts "Value: #{self.value_int}"
+    end
+
+    def display_suit
+      puts "Suit: #{self.suit}"
+    end
+
+
+    def display_description
+      puts "Description: #{self.desc}"
+    end
+    
 end
