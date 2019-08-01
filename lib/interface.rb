@@ -36,6 +36,7 @@ class Interface
         relationship_status = gets.chomp
         user = User.create(name: name, age: age, relationship_status: relationship_status)
         self.user = user
+        self.main_menu
     end
 
     def main_menu
