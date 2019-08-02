@@ -8,7 +8,8 @@ class Interface
     # puts font.write("DOOM")
     def welcome
         system "clear"
-        puts @font.write("TOROT",letter_spacing: 4)
+        
+        puts @font.write("TOROT",letter_spacing: 4).red
         puts "Welcome to the 🔮 Tarot 🔮 Application!"
           answer = prompt.select("Have you been here before?") do |menu|
           # menu.choice "🔮 NEW USER 🔮", -> {User.handle_new_user}
@@ -156,32 +157,47 @@ class Interface
     def list_hand_cards(card_array)
         
         user_choice = ""
-        # while user_choice != "❌ EXIT ❌" && user_choice != "🗑 DELETE READING 🗑" do
+         while user_choice != "⬅️ BACK ⬅️" && user_choice != "🗑 DELETE READING 🗑" do
              #self.reload
                 user_choice = prompt.select("🔮 #{self.user.name}, Select a card to see more details.") do |menu|
                 card_emoji_string = "🂠"
                 crystal_ball_emoji_string = "🔮"
                 card_array.map do |handCard|
-                    menu.choice " 🂠 TAROT #{crystal_ball_emoji_string} 🂠 ", -> {reading_card(handCard.card)}
+                  string=" 🂠 TAROT #{crystal_ball_emoji_string} 🂠 "
+                    menu.choice " 🂠 TAROT #{crystal_ball_emoji_string} 🂠 ", -> {reading_card(handCard.card, card_array,string); " 🂠 TAROT #{crystal_ball_emoji_string} 🂠 "}
                     # menu.choice " 🂠 TAROT #{crystal_ball_emoji_string} 🂠 ", -> {self.reading_card(Card.find(handCard.card_id))}
                     card_emoji_string += "🂠"
                     crystal_ball_emoji_string += " 🔮"
                 end
-                menu.choice " 🔮Read another card 🔮", -> {self.list_hand_cards(card_array)}
-                menu.choice "🗑 DELETE READING 🗑", -> {self.delete_reading(card_array)}
-                menu.choice "⬅️ Back ⬅️", -> {self.main_menu}
+                menu.choice " 🔮READ ANOTHER CARD 🔮", -> {self.list_hand_cards(card_array)}
+                menu.choice "🗑 DELETE READING 🗑", -> {self.delete_reading(card_array); "🗑 DELETE READING 🗑"}
+                menu.choice "⬅️ BACK ⬅️", -> {self.main_menu;"⬅️ BACK ⬅️"}
                 end   
             
                       #hand.card.display_information
-                # binding.pry  
-        # end 
+                #binding.pry  
+         end 
         #puts "user_choice = #{user_choice}"  
+        #binding.pry
         #self.list_hand_cards(card_array)
     end
-def reading_card(card_obj)
+
+def reading_card(card_obj, card_array, card_string)
     system "clear"
-    card_obj.display_information
-    list_hand_cards(card_array)
+    #card_obj.display_information
+    puts card_string
+    user_choice = ""
+    while user_choice != "⬅️ BACK ⬅️" do
+      user_choice = prompt.select("🔮 #{self.user.name}, please choose from the list below.") do |menu|
+        menu.choice  "🔮 READ TYPE 🔮", -> {card_obj.display_type}
+        menu.choice "🔮 READ NAME 🔮", -> {card_obj.display_name}
+        menu.choice "🔮 READ VALUE 🔮", -> {card_obj.display_value}
+        menu.choice  "🔮 READ DESCRIPTION 🔮", -> {card_obj.display_description}
+        #menu.choice = " READ ANOTHER VALUE ", -> {self.reading_card(card_obj); " READ ANOTHER VALUE "}
+        menu.choice "⬅️ BACK ⬅️", -> {self.list_hand_cards(card_array); "⬅️ BACK ⬅️"}
+      end
+    end
+
     # self.list_hand_cards(self.user.get_last_hand)
     # system "clear"
 end
@@ -209,9 +225,11 @@ end
     end
 
     def delete_yourself
+        
+        self.user.destroy
         puts "GoodBye!!! :("
-        self.destroy
-        self.main_menu
+        self.welcome
+        # user.reload
         
     end
     
