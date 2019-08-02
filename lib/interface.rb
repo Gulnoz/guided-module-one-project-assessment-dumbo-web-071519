@@ -28,7 +28,7 @@ class Interface
           # ERIC
           self.main_menu
         else
-            answer = prompt.select("There is no user with this name, please try again.") do |menu|
+          answer = prompt.select("There is no user with this name, please try again.") do |menu|
               menu.choice "🔮 Try again  🔮", -> {self.login}
               menu.choice "⬅️ Back ⬅️" , -> {self.welcome}
           end
@@ -43,14 +43,15 @@ class Interface
         prompt.select("") do |menu|
             menu.choice "Save" , -> {self.create_user(name,password,age,status)}
             menu.choice "⬅️ Back ⬅️" , -> {self.welcome}
-          end
+        end
     end
 
      def create_user(user_name,user_password,user_age,user_status)
         user = User.create(name: user_name,password: user_password, age: user_age, relationship_status: user_status)
         self.user = user
         self.main_menu
-     end
+    end
+
     def main_menu
         system "clear"
         user.reload
@@ -78,16 +79,15 @@ class Interface
 
     def display_info
       prompt.select("") do |menu|
-      puts "NAME: #{self.user.name}"
-      puts "PASSWORD: #{self.user.password}"
-      puts "BIRTHDAY: #{self.user.birthday}"
-      puts "RELATIONSHIP STATUS:  #{self.user.relationship_status}"
-      menu.choice "⬅️ Back ⬅️", -> {self.settings_menu}
+        puts "NAME: #{self.user.name}"
+        puts "PASSWORD: #{self.user.password}"
+        puts "BIRTHDAY: #{self.user.birthday}"
+        puts "RELATIONSHIP STATUS:  #{self.user.relationship_status}"
+        menu.choice "⬅️ Back ⬅️", -> {self.settings_menu}
+      end
     end
-    end
+
     def delete_reading(card_array)
-      # system "clear"
-      # user.reload
       card_array.each do |hand_card|
         hand_card.destroy
       end
@@ -95,32 +95,27 @@ class Interface
       self.main_menu
     end
 
-
-    #TODO: Create a card reading options menu
-
     def exit_program
           @prompt.say("Bye bish!")
           exit!
     end
 
-    def handle_new_reading
-        
+    #Array of instanses of hand_cards present them like menu of cards 
+    #to be abe to choise one
+    #we get card_id wich was chosen and returning the card object from the hand_card table    
+    def handle_new_reading        
         self.user.generate_hand_cards
         puts "generating your fortune...please stand by..."
         self.list_hand_cards(self.user.get_last_hand)
-        #Array of instanses of hand_cards present them like menu of cards 
-        #to be abe to choise one
-        #we get card_id wich was chosen and returning the card object from the hand_card table
     end
 
+    #array of dates wich we need to make menu of selections fro user to select a date 
+    #when user select the date from menu we we pass it(variable) to handle_previous_reading_by_date(selected_date)
     def handle_previous_reading
         puts "finding your fortune...🔮 🔮 🔮 please stand by...🔮 🔮 🔮"
         self.list_reading_dates
-        #array of dates wich we need to make menu of selections fro user to select a date 
-        #when user select the date from menu we we pass it(variable) to handle_previous_reading_by_date(selected_date)
     end
     
-
 
     #TODO: work on this method so that it returns a TTY::Prompt.new.select menu for reading
     #the individual dates
@@ -134,8 +129,7 @@ class Interface
                 end
                 menu.choice "⬅️ Back ⬅️", -> {self.main_menu}
             end
-        # end
-        
+        # end 
     end
 
     def handle_previous_reading_by_date(selected_date)
@@ -148,14 +142,12 @@ class Interface
     def list_hand_cards(card_array)        
         user_choice = ""
          while user_choice != "⬅️ BACK ⬅️" && user_choice != "🗑 DELETE READING 🗑" do
-             #self.reload
                 user_choice = prompt.select("🔮 #{self.user.name}, Select a card to see more details.") do |menu|
                 card_emoji_string = "🂠"
                 crystal_ball_emoji_string = "🔮"
                 card_array.map do |handCard|
                   string=" 🂠 TAROT #{crystal_ball_emoji_string} 🂠 "
                     menu.choice " 🂠 TAROT #{crystal_ball_emoji_string} 🂠 ", -> {reading_card(handCard.card, card_array,string); " 🂠 TAROT #{crystal_ball_emoji_string} 🂠 "}
-                    # menu.choice " 🂠 TAROT #{crystal_ball_emoji_string} 🂠 ", -> {self.reading_card(Card.find(handCard.card_id))}
                     card_emoji_string += "🂠"
                     crystal_ball_emoji_string += " 🔮"
                 end
@@ -165,6 +157,7 @@ class Interface
          end 
     end
 
+  #TODO: Create a card reading options menu
   def reading_card(card_obj, card_array, card_string)
       system "clear"
       puts card_string
@@ -182,21 +175,19 @@ class Interface
 
     def update_name
         name =  prompt.ask("What name would you like to have?")
-        #name=gets.chomp
         User.update(self.user.id, :name => name)
         self.settings_menu
     end
+
     def update_password
       password =  prompt.ask("Enter new password.")
-      #name=gets.chomp
       User.update(self.user.id, :password => password)
       self.settings_menu
   end
     
-    # HandCard.update(hand_card_id, :card_id => self.available_cards.sample.id)
+
     def update_birthday
-        name = prompt.ask("Enter your birthday like (MM/DD/YYYY).")
-        #birthday=gets.chomp
+        birthday = prompt.ask("Enter your birthday like (MM/DD/YYYY).")
         User.update(self.user.id, :birthday => birthday)
         self.settings_menu
     end
@@ -204,20 +195,16 @@ class Interface
     def update_relationship_status
         puts("Enter your relationship status.")
         status = prompt.ask("(It's ok, we've been there..)") 
-        status=gets.chomp
         User.update(self.user.id, :relationship_status => status)
         self.settings_menu
     end
 
-    def delete_yourself
-        #puts "Goodbye #{self.user.name}!!! :( "  
+    def delete_yourself 
         self.user.hand_cards.each do |hand_card|
           hand_card.destroy
         end
         self.user.destroy
-        self.welcome
-        
-        
+        self.welcome        
     end
     
 end
