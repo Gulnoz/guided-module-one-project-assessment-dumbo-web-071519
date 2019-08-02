@@ -8,7 +8,7 @@ class Interface
 
     def welcome
         system "clear"
-        puts @font.write("TOROT",letter_spacing: 4).red
+        puts @font.write("TAROT",letter_spacing: 4).red
         puts "Welcome to the 🔮 Tarot 🔮 Application!"
           answer = prompt.select("Have you been here before?") do |menu|
           menu.choice "🔮 LOGIN  🔮", -> {self.login}
