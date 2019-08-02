@@ -19,9 +19,11 @@ class Interface
 
     def login
         system "clear"  
-        name = prompt.ask("What is your name?")
-        if User.find_by(name: name)!=nil
-          self.user = User.find_by(name: name)
+        user_name = prompt.ask("What is your name?")
+        user_password = prompt.mask("What is your password?")
+        user_obj=User.find_by(name: user_name, password: user_password)
+        if user_obj!=nil
+          self.user = user_obj
           user.reload
           # ERIC
           self.main_menu
@@ -35,16 +37,17 @@ class Interface
 
     def create_new_user
         name=prompt.ask("What's your name?")
+        password=prompt.mask("Create password:")
         age=prompt.ask("Enter your age?")
         status=prompt.ask("What's your relationship status?")
         prompt.select("") do |menu|
-            menu.choice "Save" , -> {self.create_user(name,age,status)}
+            menu.choice "Save" , -> {self.create_user(name,password,age,status)}
             menu.choice "⬅️ Back ⬅️" , -> {self.welcome}
           end
     end
 
-     def create_user(user_name,user_age,user_status)
-        user = User.create(name: user_name, age: user_age, relationship_status: user_status)
+     def create_user(user_name,user_password,user_age,user_status)
+        user = User.create(name: user_name,password: user_password, age: user_age, relationship_status: user_status)
         self.user = user
         self.main_menu
      end
@@ -63,7 +66,9 @@ class Interface
       system "clear"
       user.reload
       prompt.select("#{self.user.name}! 🔮 🔮 🔮 Please select a settings option. 🔮 🔮 🔮") do |menu|
+      menu.choice "🔮 VIEW INFO 🔮", -> {self.display_info}
           menu.choice "🔮 UPDATE NAME 🔮", -> {self.update_name}
+          menu.choice "🔮 UPDATE PASSWORD 🔮", -> {self.update_password}
           menu.choice "🔮 UPDATE BIRTHDAY 🔮", -> {self.update_birthday}
           menu.choice "🔮 UPDATE RELATIONSHIP STATUS 🔮", -> {self.update_relationship_status}
           menu.choice "🔮 DELETE YOURSELF 🔮", -> {self.delete_yourself}
@@ -71,6 +76,15 @@ class Interface
       end
     end
 
+    def display_info
+      prompt.select("") do |menu|
+      puts "NAME: #{self.user.name}"
+      puts "PASSWORD: #{self.user.password}"
+      puts "BIRTHDAY: #{self.user.birthday}"
+      puts "RELATIONSHIP STATUS:  #{self.user.relationship_status}"
+      menu.choice "⬅️ Back ⬅️", -> {self.settings_menu}
+    end
+    end
     def delete_reading(card_array)
       # system "clear"
       # user.reload
@@ -167,11 +181,17 @@ class Interface
   end
 
     def update_name
-        name =  prompt.ask("What name would you like to have")
+        name =  prompt.ask("What name would you like to have?")
         #name=gets.chomp
         User.update(self.user.id, :name => name)
         self.settings_menu
     end
+    def update_password
+      password =  prompt.ask("Enter new password.")
+      #name=gets.chomp
+      User.update(self.user.id, :password => password)
+      self.settings_menu
+  end
     
     # HandCard.update(hand_card_id, :card_id => self.available_cards.sample.id)
     def update_birthday
