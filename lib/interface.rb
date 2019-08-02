@@ -187,7 +187,7 @@ class Interface
     
 
     def update_birthday
-        birthday = prompt.ask("Enter your birthday like (MM/DD/YYYY).")
+        birthday = prompt.ask("Enter your birthday like (DD/MM/YYYY).")
         User.update(self.user.id, :birthday => birthday)
         self.settings_menu
     end
